@@ -23,6 +23,18 @@ const insertDocuments = function (db, callback) {
     });
 };
 
+const findDocuments = (db, callback) => {
+    // Get the documents colection
+    const collection = db.collection("documents");
+    // Find some documents
+    collection.find({}).toArray((err, docs) => {
+        assert.equal(err, null);
+        console.log("Found the following records");
+        console.log(docs);
+        callback(docs);
+    });
+};
+
 // Use connect method to connect to the server
 MongoClient.connect(url, (err, client) => {
     assert.equal(null, err);
@@ -30,7 +42,9 @@ MongoClient.connect(url, (err, client) => {
 
     const db = client.db(dbName);
 
-    insertDocuments(db, function () {
-        client.close();
+    insertDocuments(db, () => {
+        findDocuments(db, () => {
+            client.close();
+        });
     });
 });
