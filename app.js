@@ -27,11 +27,23 @@ const findDocuments = (db, callback) => {
     // Get the documents colection
     const collection = db.collection("documents");
     // Find some documents
-    collection.find({ a: 3 }).toArray((err, docs) => {
+    collection.find({}).toArray((err, docs) => {
         assert.equal(err, null);
         console.log("Found the following records");
         console.log(docs);
         callback(docs);
+    });
+};
+
+const updateDocument = (db, callback) => {
+    // Get the documents collection
+    const collection = db.collection("documents");
+    // Update document where a is 2, set b equal to 1
+    collection.updateOne({ a: 2 }, { $set: { b: 1 } }, (err, result) => {
+        assert.equal(err, null);
+        assert.equal(1, result.result.n);
+        console.log("Updated the document with the field a equal to 2");
+        callback(result);
     });
 };
 
@@ -42,9 +54,13 @@ MongoClient.connect(url, (err, client) => {
 
     const db = client.db(dbName);
 
-    insertDocuments(db, () => {
-        findDocuments(db, () => {
-            client.close();
-        });
+    // insertDocuments(db, () => {
+    //     updateDocument(db, () => {
+    //         client.close();
+    //     });
+    // });
+
+    findDocuments(db, () => {
+        client.close();
     });
 });
