@@ -59,6 +59,13 @@ const removeDocument = (db, callback) => {
     });
 };
 
+const indexCollection = (db, callback) => {
+    db.collection("documents").createIndex({ a: 1 }, null, (err, results) => {
+        console.log(results);
+        callback();
+    });
+};
+
 // Use connect method to connect to the server
 MongoClient.connect(url, (err, client) => {
     assert.equal(null, err);
@@ -67,10 +74,8 @@ MongoClient.connect(url, (err, client) => {
     const db = client.db(dbName);
 
     insertDocuments(db, () => {
-        updateDocument(db, () => {
-            removeDocument(db, () => {
-                client.close();
-            });
+        indexCollection(db, () => {
+            client.close();
         });
     });
 });
