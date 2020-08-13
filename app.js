@@ -27,7 +27,7 @@ const findDocuments = (db, callback) => {
     // Get the documents colection
     const collection = db.collection("documents");
     // Find some documents
-    collection.find({}).toArray((err, docs) => {
+    collection.find({ a: 3 }).toArray((err, docs) => {
         assert.equal(err, null);
         console.log("Found the following records");
         console.log(docs);
